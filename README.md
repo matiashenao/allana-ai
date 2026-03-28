@@ -41,7 +41,7 @@ Este sistema no se limita a responder preguntas, este sistema es el verdadero 1 
 ## 🚀 Instalación rápida
 ```bash
 # Clonar repo
-git clone https://github.com/tu-usuario/allana-ai
+git clone https://github.com/matiashenao/allana-ai
 
 # Entrar
 cd allana-ai
