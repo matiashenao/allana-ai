@@ -28,7 +28,7 @@ Este sistema no se limita a responder preguntas, este sistema es el verdadero 1 
 ## ✨ Funciones Principales
 
 * **💬 ChatBot** ("NOVA") Chat contextual 120B
-* **💙 Simula una ex-novia real** ("Persona")¡Entrenada con chats reales! (tono, emociones, reacciones)
+* **💙 Simula una ex-novia real** ("Persona") ¡Entrenada con chats reales! (tono, emociones, reacciones)
 * **👯 Crea un mejor amigo virtual** (“Dola”) con actitud propia
 * **🏛️ Debate Engine:** Simulación de debates, construcción de argumentos y confrontación ideológica en múltiples estilos, adopta personajes políticos e imita su conducta
 * **🎙️ Asistente de voz en tiempo real con IA** ("Allana")
