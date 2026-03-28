@@ -36,6 +36,7 @@ Este sistema no se limita a responder preguntas, este sistema es el verdadero 1 
 * **🤖 Detector de textos hechos con IA**
 * **🔐 Generador de contraseñas** y hashes seguros
 * **📄 Resume textos y archivos**
+* **🌙 Modo noche  y  modo claro** en la interfaz
 
 ---
 ## 🚀 Instalación rápida
