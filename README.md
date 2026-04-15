@@ -63,4 +63,8 @@ python3 main.py
 ---
 ## 😶‍🌫️ FINNN
 "Donde el código se encuentra con la pasión. Un tributo al aprendizaje y la persistencia."
+<<<<<<< HEAD
 > **Hay que complacer a nuestros pequeños heroes de mente...
+=======
+> **Hay que complacer a nuestros pequeños heroes de mente...
+>>>>>>> c331a21 (🚀 Allana AI - versión final entregable)

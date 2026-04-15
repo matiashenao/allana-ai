@@ -1,0 +1,351 @@
+<!-- NOVA AI SPA -->
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>NOVA AI</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
+    <style>
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background-color: #0d0d0d;
+            color: white;
+            display: flex;
+        }
+
+        /* Sidebar */
+        .sidebar {
+            width: 250px;
+            background-color: #111;
+            height: 100vh;
+            padding: 20px;
+            box-sizing: border-box;
+        }
+
+        .sidebar h2 { margin-bottom: 20px; }
+        .sidebar button {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 10px;
+            background-color: #1f1f1f;
+            border: none;
+            color: white;
+            cursor: pointer;
+            border-radius: 8px;
+        }
+        .sidebar button:hover { background-color: #333; }
+
+        /* Chat container */
+        .chat-container {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            height: 100vh;
+        }
+
+        .messages {
+            padding: 20px;
+            overflow-y: auto;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Burbujas */
+        .message {
+            max-width: 60%;
+            padding: 12px;
+            margin-bottom: 10px;
+            border-radius: 12px;
+        }
+        .user { background-color: #2a2a2a; align-self: flex-end; }
+        .bot { background-color: #1a1a1a; align-self: flex-start; }
+
+        /* Input */
+        .input-container {
+            padding: 20px;
+            border-top: 1px solid #333;
+            display: flex;
+        }
+
+        input {
+            flex: 1;
+            padding: 12px;
+            border-radius: 10px;
+            border: none;
+            outline: none;
+            background-color: #1f1f1f;
+            color: white;
+        }
+
+        button.send {
+            margin-left: 10px;
+            padding: 12px 20px;
+            border: none;
+            border-radius: 10px;
+            background-color: #444;
+            color: white;
+            cursor: pointer;
+        }
+        button.send:hover { background-color: #666; }
+
+        .title {
+            text-align: center;
+            margin-top: 20px;
+            font-size: 20px;
+            opacity: 0.7;
+        }
+
+        /* Tools */
+        .tools-button {
+            position: fixed;
+            bottom: 90px;
+            right: 20px;
+            width: 50px;
+            height: 50px;
+            background: #444;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 28px;
+            cursor: pointer;
+        }
+
+        .tools-menu {
+            position: fixed;
+            bottom: 150px;
+            right: 20px;
+            display: none;
+            flex-direction: column;
+        }
+        .tools-menu button {
+            margin-bottom: 5px;
+            padding: 10px;
+            background: #222;
+            color: white;
+            border: none;
+            border-radius: 8px;
+        }
+
+        body.light { background-color: white; color: black; }
+        body.light .sidebar { background-color: #eee; }
+        body.light input { background-color: #ddd; color: black; }
+        body.light .message.user { background-color: #ccc; }
+        body.light .message.bot { background-color: #bbb; }
+
+        .icon-btn {
+            background: transparent;
+            border: none;
+            font-size: 18px;
+            color: #aaa;
+            cursor: pointer;
+            padding: 8px;
+            border-radius: 8px;
+            transition: 0.2s;
+        }
+        .icon-btn:hover { background: #333; color: white; }
+
+    </style>
+</head>
+<body>
+
+    <!-- Sidebar -->
+    <div class="sidebar">
+        <h2>SmartLife</h2>
+        <button onclick="setMode('ia')">🤖 NOVA Chat</button>
+        <button onclick="setMode('dola')">💜 Dola</button>
+        <button onclick="setMode('debate')">⚖️ Debate</button>
+        <button onclick="setMode('persona')">🧠 Persona</button>
+        <button onclick="setMode('allana')">🎙️ Allana</button>
+        <button onclick="setMode('code')">💻 Code</button>
+    </div>
+
+    <!-- Chat -->
+    <div class="chat-container">
+        <div class="title" id="title">Hola, {{ username }} 😉</div>
+        <div class="messages" id="messages"></div>
+
+        <div class="input-container">
+            <!-- Tools -->
+            <div class="tools-button" onclick="toggleMenu()">+</div>
+            <div class="tools-menu" id="toolsMenu">
+                <button onclick="uploadFile()">📂 Subir archivo</button>
+                <button onclick="generatePassword()">🔐 Generar contraseña</button>
+                <button onclick="summarizeText()">📄 Resumir texto</button>
+                <button onclick="detectAI()">🤖 Detector IA</button>
+            </div>
+
+            <input type="text" id="input" placeholder="Escribe algo...">
+            <button class="send" onclick="sendMessage()">Enviar</button>
+            <button class="icon-btn" onclick="hablar()">
+                <i class="fa-solid fa-microphone"></i>
+            </button>
+            <button class="icon-btn" onclick="toggleTheme()">
+                <i class="fa-solid fa-moon"></i>
+            </button>
+        </div>
+    </div>
+
+<script>
+let dark = true;
+let mode = "ia";
+let memory = { ia: [], dola: [], debate: [], persona: [], allana: [], code: [] };
+
+function toggleTheme() { document.body.classList.toggle("light"); }
+
+function setMode(newMode) {
+    mode = newMode;
+
+    let messagesDiv = document.getElementById("messages");
+    messagesDiv.innerHTML = "";
+
+    let title = document.getElementById("title");
+
+    if (mode === "dola") title.innerText = "Dola 💜";
+    else if (mode === "debate") title.innerText = "Modo Debate ⚖️";
+    else if (mode === "persona") title.innerText = "Simulación 🧠";
+    else if (mode === "allana") title.innerText = "Allana 🎙️";
+    else if (mode === "code") title.innerText = "Code 💻";
+    else title.innerText = "NOVA CHAT 🤖";
+
+    // 🔥 VOLVER A PINTAR EL HISTORIAL
+    memory[mode].forEach(msg => {
+        let div = document.createElement("div");
+        div.classList.add("message", msg.sender);
+        div.innerText = msg.text;
+        messagesDiv.appendChild(div);
+    });
+}
+
+function hablar() {
+    const recognition = new webkitSpeechRecognition();
+    recognition.lang = "es-CO";
+
+    recognition.onresult = function(event) {
+        document.getElementById("input").value = event.results[0][0].transcript;
+        sendMessage();
+    };
+
+    recognition.start();
+}
+
+function hablarTexto(texto) {
+    const speech = new SpeechSynthesisUtterance(texto);
+    speech.lang = "es-ES";
+    speech.pitch = 1.2;
+    speech.rate = 0.95;
+    const voces = speechSynthesis.getVoices();
+    const voz = voces.find(v => v.lang.includes("es"));
+    if (voz) speech.voice = voz;
+    speechSynthesis.speak(speech);
+}
+
+function addMessage(text, sender) {
+    let div = document.createElement("div");
+    div.classList.add("message", sender);
+    div.innerText = text;
+    document.getElementById("messages").appendChild(div);
+    div.scrollIntoView();
+    memory[mode].push({text, sender});
+}
+
+function sendMessage() {
+    let input = document.getElementById("input");
+    let text = input.value;
+    if (!text) return;
+
+    addMessage(text, "user");
+    input.value = "";
+
+    let endpoint = "/chat";
+    if (mode === "dola") endpoint = "/dola";
+    else if (mode === "debate") endpoint = "/debate";
+    else if (mode === "persona") endpoint = "/persona";
+    else if (mode === "allana") endpoint = "/allana";
+    else if (mode === "code") endpoint = "/code";
+
+    let thinkingDiv = document.createElement("div");
+    thinkingDiv.classList.add("message", "bot");
+    thinkingDiv.innerText = mode === "dola" ? "Dola está pensando en ti... 💜" : "Pensando... 🤔";
+    document.getElementById("messages").appendChild(thinkingDiv);
+    thinkingDiv.scrollIntoView();
+
+    let start = Date.now();
+
+    setTimeout(() => {
+        fetch(endpoint, {
+            method: "POST",
+            headers: {"Content-Type": "application/json"},
+            body: JSON.stringify({message: text})
+        })
+        .then(res => res.json())
+        .then(data => {
+            let elapsed = Date.now() - start;
+            let delay = Math.max(500 - elapsed, 0);
+
+            setTimeout(() => {
+                thinkingDiv.remove();
+                addMessage(data.response, "bot");
+
+                if (mode === "allana" && data.audio_url) {
+                    const audio = new Audio(data.audio_url);
+                    audio.play();
+                }
+            }, delay);
+        })
+        .catch(err => { thinkingDiv.innerText = "Error 😢"; });
+    }, 50);
+}
+
+function toggleMenu() {
+    let menu = document.getElementById("toolsMenu");
+    menu.style.display = menu.style.display === "flex" ? "none" : "flex";
+}
+
+document.addEventListener("click", function(e) {
+    let menu = document.getElementById("toolsMenu");
+    let button = document.querySelector(".tools-button");
+    if (!menu.contains(e.target) && !button.contains(e.target)) menu.style.display = "none";
+});
+
+function generatePassword() {
+    fetch("/password").then(res => res.json()).then(data => addMessage("🔐 " + data.password, "bot"));
+}
+
+function summarizeText() {
+    let text = prompt("Pega el texto a resumir:");
+    if (!text) return;
+    fetch("/resumir", {method: "POST", headers: {"Content-Type": "application/json"}, body: JSON.stringify({text})})
+    .then(res => res.json()).then(data => addMessage(data.resumen, "bot"));
+}
+
+function uploadFile() {
+    let input = document.createElement("input");
+    input.type = "file";
+    input.onchange = () => {
+        let file = input.files[0];
+        let formData = new FormData();
+        formData.append("file", file);
+        fetch("/upload", {method: "POST", body: formData})
+        .then(res => res.json()).then(() => addMessage("📂 Archivo subido", "bot"));
+    };
+    input.click();
+}
+
+function detectAI() {
+    let text = prompt("Texto a analizar:");
+    if (!text) return;
+    fetch("/detect", {method: "POST", headers: {"Content-Type": "application/json"}, body: JSON.stringify({text})})
+    .then(res => res.json()).then(data => addMessage("🤖 " + data.resultado, "bot"));
+}
+
+document.getElementById("input").addEventListener("keypress", function(e) {
+    if (e.key === "Enter") sendMessage();
+});
+</script>
+</body>
+</html>
